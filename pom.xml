@@ -46,6 +46,42 @@
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
         </dependency>
+		<dependency>
+			<groupId>castor</groupId>
+			<artifactId>castor</artifactId>
+			<version>0.9.7</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.13</version>
+		</dependency>
+		<dependency>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.8.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>oro</groupId>
+			<artifactId>oro</artifactId>
+			<version>2.0.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -67,7 +103,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>in.gov.uidai.otpapiclient.OtpAPIClientMain</mainClass>
+                            <mainClass>com.example.AddressUpdateApp.otpapi.OtpAPIClientMain</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -75,7 +111,15 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-		</plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
 
 </project>
