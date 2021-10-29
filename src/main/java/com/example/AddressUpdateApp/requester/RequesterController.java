@@ -27,4 +27,5 @@ public class RequesterController {
     public String verifyOtp(@PathVariable("uid") String uid, @PathVariable("txn") String txn, @PathVariable("otp") String otpInRRequest) {
         return requesterService.verifyOtp(uid, txn, otpInRRequest);
     }
+
 }
