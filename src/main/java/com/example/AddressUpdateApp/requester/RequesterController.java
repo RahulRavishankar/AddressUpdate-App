@@ -2,7 +2,7 @@ package com.example.AddressUpdateApp.requester;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path="requester")
 public class RequesterController {
