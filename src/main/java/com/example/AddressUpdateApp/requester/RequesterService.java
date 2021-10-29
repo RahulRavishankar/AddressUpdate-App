@@ -4,19 +4,34 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class RequesterService {
 
-    public void createRequester(String uid) {
+    private final RequesterRepository requesterRepository;
+
+    @Autowired
+    public RequesterService(RequesterRepository requesterRepository) {
+        this.requesterRepository = requesterRepository;
+    }
+
+    public void addRequester(Requester requester) {
+        Optional<Requester> requesterByUid = requesterRepository.findRequesterByUid(requester.getUid());
+        if(!requesterByUid.isPresent()) {
+            requesterRepository.save(requester);
+        }
+        System.out.println(requester);
     }
 
     public String generateOtp(String uid) {
@@ -113,5 +128,26 @@ public class RequesterService {
             je.printStackTrace();
         }
         return res;
+    }
+
+    public void deleteStudent(String uid) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+           requesterRepository.deleteById(uid);
+        }
+        else {
+            System.out.println("Could not delete user with uid: "+ uid + ". User does not exist");
+        }
+    }
+
+    @Transactional
+    public void updateRequester(String uid, String txnId) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+            Optional<Requester> requesterByUid = requesterRepository.findById(uid); // or findRequesterByUid
+            if(requesterByUid.get().getTxnId() == null) {
+                requesterByUid.get().setTxnId(txnId);
+            }
+        }
     }
 }

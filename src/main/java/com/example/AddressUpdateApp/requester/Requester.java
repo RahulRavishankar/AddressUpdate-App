@@ -1,7 +1,14 @@
 package com.example.AddressUpdateApp.requester;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table
 public class Requester {
 
+	@Id
 	private String uid;
 	private String txnId;
 
@@ -23,6 +30,14 @@ public class Requester {
 
 	public void setUid(String uid) {
 		this.uid = uid;
+	}
+
+	public String getTxnId() {
+		return txnId;
+	}
+
+	public void setTxnId(String txnId) {
+		this.txnId = txnId;
 	}
 
 	@Override
