@@ -2,22 +2,34 @@ package com.example.AddressUpdateApp.requester;
 
 public class Requester {
 
-	private String id;
-	
-	
+	private String uid;
+	private String txnId;
+
 	public Requester() {
-	
 	}
-	
-	public Requester(String id) {
-		super();
-		this.id = id;
+
+	private Requester(String uid, String txnId) {
+		this.uid = uid;
+		this.txnId = txnId;
 	}
-	
-	public String getId() {
-		return id;
+
+	public Requester(String uid) {
+		this(uid,null);
 	}
-	public void setId(String id) {
-		this.id = id;
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	@Override
+	public String toString() {
+		return "Requester{" +
+				"uid='" + uid + '\'' +
+				", txnId='" + txnId + '\'' +
+				'}';
 	}
 }
