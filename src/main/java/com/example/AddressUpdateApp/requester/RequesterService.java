@@ -219,12 +219,38 @@ public class RequesterService {
             }
         }
 
-        ///Send email here///
+        ///Send email/////////
+        String toEmail = "rahul.k.ravishankar@gmail.com";
+        jsonObject = new JSONObject();
+        try {
+            jsonObject.put("toEmail", toEmail);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
 
-        /////////////////////
+        httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost request = new HttpPost("http://localhost:8080/emailApi/sendEmail");
+            StringEntity params = new StringEntity(jsonObject.toString());
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+
+            HttpResponse response = httpClient.execute(request);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        ////////////////////////
 
 
         // What happens if an invalid introducerUid is entered?
-        return "Request sent?";
+        return "Request sent";
     }
 }
