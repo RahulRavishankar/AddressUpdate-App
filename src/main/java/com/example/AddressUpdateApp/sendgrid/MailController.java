@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.example.AddressUpdateApp.sendgrid.MailService;
 
-
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(value = "/emailApi")
 public class MailController {

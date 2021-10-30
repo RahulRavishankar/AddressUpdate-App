@@ -72,19 +72,25 @@ public class RequesterService {
         }
 
         String res = "Invalid data";
+        JSONObject jsonres = new JSONObject();
+        jsonres = jsonObject;
         try {
             if(jsonResponse.get("status").toString().equalsIgnoreCase("Y")) {
                 res = "OTP Generation Successful";
+                System.out.println(res);
+                jsonres.put("success", "Y");
+                
             }
         }
         catch(JSONException je) {
             je.printStackTrace();
         }
-        return res;
+        System.out.println("returning"+jsonres.toString());
+        return jsonres.toString();
     }
 
     public String verifyOtp(String uid, String txnId, String otp) {
-
+    	
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("uid", uid);

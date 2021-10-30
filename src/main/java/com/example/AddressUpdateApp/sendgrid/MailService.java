@@ -37,8 +37,8 @@ public class MailService {
 		Email from = new Email(src);
 		String subject = subj;
 		Email to = new Email(dest);
-		Content content = new Content("text/plain", "Please provide consent to <RequesterUid> at http://localhost:8080/ . " +
-				"Link expires in 24hrs");
+		Content content = new Content("text/plain", "Please provide consent to <RequesterUid> at http://localhost:3000/ . " +
+				"\n\nPLEASE LOGIN AS INTRODUCER.\n\nLink expires in 24hrs.\n\nThank You.");
 		Mail mail = new Mail(from, subject, to, content);
 
 		SendGrid sg = new SendGrid(sendGridAPIKey);
@@ -49,7 +49,7 @@ public class MailService {
 			request.setBody(mail.build());
 			Response response = sg.api(request);
 //			logger.info(response.getBody());
-			return response.getBody();
+			return "success";
 		} catch (IOException ex) {
 			throw ex;
 		}
