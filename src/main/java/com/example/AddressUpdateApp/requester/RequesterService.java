@@ -130,7 +130,7 @@ public class RequesterService {
         return res;
     }
 
-    public void deleteStudent(String uid) {
+    public void deleteRequester(String uid) {
         boolean exists = requesterRepository.existsById(uid);
         if(exists) {
            requesterRepository.deleteById(uid);
@@ -149,5 +149,43 @@ public class RequesterService {
                 requesterByUid.get().setTxnId(txnId);
             }
         }
+    }
+
+    public String fetchAddress(String uid, String txnId, String otp) {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("uid", uid);
+            jsonObject.put("txnId", txnId);
+            jsonObject.put("otp", otp);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        JSONObject jsonRes = null;
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost request = new HttpPost("https://stage1.uidai.gov.in/onlineekyc/getEkyc/");
+            StringEntity params = new StringEntity(jsonObject.toString());
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+
+            HttpResponse response = httpClient.execute(request);
+            String json = EntityUtils.toString(response.getEntity());
+            jsonRes = new JSONObject(json);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println(jsonRes);
+        return jsonRes.toString();
     }
 }

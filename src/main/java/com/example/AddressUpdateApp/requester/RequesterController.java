@@ -24,8 +24,13 @@ public class RequesterController {
     }
 
     @GetMapping(path="verifyOtp/{uid}/{txn}/{otp}")
-    public String verifyOtp(@PathVariable("uid") String uid, @PathVariable("txn") String txn, @PathVariable("otp") String otpInRRequest) {
-        return requesterService.verifyOtp(uid, txn, otpInRRequest);
+    public String verifyOtp(@PathVariable("uid") String uid, @PathVariable("txn") String txnId, @PathVariable("otp") String otp) {
+        return requesterService.verifyOtp(uid, txnId, otp);
+    }
+
+    @GetMapping(path="fetchAddress/{uid}/{txn}/{otp}")
+    public String fetchAddress(@PathVariable("uid") String uid, @PathVariable("txn") String txnId, @PathVariable("otp") String otp) {
+        return requesterService.fetchAddress(uid, txnId, otp);
     }
 
     @PostMapping
@@ -34,8 +39,8 @@ public class RequesterController {
     }
 
     @DeleteMapping(path="{uid}")
-    public void deleteStudent(@PathVariable("uid") String uid) {
-        requesterService.deleteStudent(uid);
+    public void deleteRequester(@PathVariable("uid") String uid) {
+        requesterService.deleteRequester(uid);
     }
 
     @PutMapping(path="{uid}/{txnId}")
