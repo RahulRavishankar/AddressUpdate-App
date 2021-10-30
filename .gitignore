@@ -5,6 +5,7 @@ mvnw
 mvnw.cmd
 src/main/frontend/
 #pom.xml
+src/main/resources/sendgrid.env
 
 HELP.md
 target/
