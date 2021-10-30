@@ -1,15 +1,15 @@
-package com.example.AddressUpdateApp.requester;
+package com.example.AddressUpdateApp.introducer;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -17,21 +17,24 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-public class RequesterService {
+public class IntroducerService {
 
-    private final RequesterRepository requesterRepository;
+    private final IntroducerRepository introducerRepository;
 
     @Autowired
-    public RequesterService(RequesterRepository requesterRepository) {
-        this.requesterRepository = requesterRepository;
+    public IntroducerService(IntroducerRepository introducerRepository) {
+        this.introducerRepository = introducerRepository;
     }
 
-    public void addRequester(Requester requester) {
-        Optional<Requester> requesterByUid = requesterRepository.findRequesterByUid(requester.getUid());
-        if(!requesterByUid.isPresent()) {
-            requesterRepository.save(requester);
+    public void addIntroducer(Introducer introducer) {
+
+        introducer.setConsentProvided(Consent.AWAITING_RESPONSE);
+        Optional<Introducer> introducerByUid = introducerRepository.findIntroducerByUid(introducer.getUid());
+        System.out.println("Before inserting: " + introducer);
+        if(!introducerByUid.isPresent()) {
+            introducerRepository.save(introducer);
         }
-        System.out.println(requester);
+        System.out.println(introducer);
     }
 
     public String generateOtp(String uid) {
@@ -130,10 +133,10 @@ public class RequesterService {
         return res;
     }
 
-    public void deleteRequester(String uid) {
-        boolean exists = requesterRepository.existsById(uid);
+    public void deleteIntroducer(String uid) {
+        boolean exists = introducerRepository.existsById(uid);
         if(exists) {
-           requesterRepository.deleteById(uid);
+           introducerRepository.deleteById(uid);
         }
         else {
             System.out.println("Could not delete user with uid: "+ uid + ". User does not exist");
@@ -141,12 +144,12 @@ public class RequesterService {
     }
 
     @Transactional
-    public void updateRequester(String uid, String txnId) {
-        boolean exists = requesterRepository.existsById(uid);
+    public void updateIntroducer(String uid, String txnId) {
+        boolean exists = introducerRepository.existsById(uid);
         if(exists) {
-            Optional<Requester> requesterByUid = requesterRepository.findById(uid); // or findRequesterByUid
-            if(requesterByUid.get().getTxnId() == null) {
-                requesterByUid.get().setTxnId(txnId);
+            Optional<Introducer> introducerByUid = introducerRepository.findById(uid); // or findIntroducerByUid
+            if(introducerByUid.get().getTxnId() == null) {
+                introducerByUid.get().setTxnId(txnId);
             }
         }
     }
@@ -189,47 +192,16 @@ public class RequesterService {
         return jsonRes.toString();
     }
 
-    public String requestConsent(String uid, String introducerUid) {
-        // Add Introducer to the database
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("uid", introducerUid);
-            jsonObject.put("requesterUid", uid);
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        try {
-            HttpPost request = new HttpPost("http://localhost:8080/introducer/addIntroducer");
-            StringEntity params = new StringEntity(jsonObject.toString());
-            request.addHeader("content-type", "application/json");
-            request.setEntity(params);
-
-            HttpResponse response = httpClient.execute(request);
-            System.out.println("Here: "+ response);
-
-//            String json = EntityUtils.toString(response.getEntity());
-//            JSONObject jsonRes = new JSONObject(json);
-//            System.out.println("Json obj: " + jsonRes);
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                httpClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+    public void updateConsent(String uid, String requesterUid, Consent consent) {
+        boolean exists = introducerRepository.existsById(uid);
+        if(exists) {
+            Optional<Introducer> introducerByUid = introducerRepository.findIntroducerByUidAndRequesterUid(uid, requesterUid); // or findIntroducerByUid
+            if(introducerByUid.get().getConsentProvided() != consent) {
+                System.out.println("Before updating: "+ introducerByUid.get());
+                introducerByUid.get().setConsentProvided(consent);
             }
         }
 
-        ///Send email here///
-
-        /////////////////////
-
-
-        // What happens if an invalid introducerUid is entered?
-        return "Request sent?";
+        // once the consent is given, notify the requester
     }
 }

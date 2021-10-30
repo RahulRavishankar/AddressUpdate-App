@@ -11,6 +11,7 @@ public class Requester {
 	@Id
 	private String uid;
 	private String txnId;
+	private String addressXml;
 
 	public Requester() {
 	}

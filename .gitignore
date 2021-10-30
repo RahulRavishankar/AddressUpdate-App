@@ -3,8 +3,6 @@
 bin/
 mvnw
 mvnw.cmd
-src/main/frontend/
-#pom.xml
 
 HELP.md
 target/

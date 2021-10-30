@@ -2,6 +2,7 @@ package com.example.AddressUpdateApp.requester;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path="requester")
@@ -19,7 +20,6 @@ public class RequesterController {
 
     @GetMapping(path="generateOtp/{uid}")
     public String generateOtp(@PathVariable("uid") String uid) {
-//        requesterService.addRequester(uid);
         return requesterService.generateOtp(uid);
     }
 
@@ -33,18 +33,24 @@ public class RequesterController {
         return requesterService.fetchAddress(uid, txnId, otp);
     }
 
-    @PostMapping
+    @PostMapping(path="addRequester")
     public void addRequester(@RequestBody Requester requester) {
         requesterService.addRequester(requester);
     }
 
-    @DeleteMapping(path="{uid}")
+    @DeleteMapping(path="deleteRequester/{uid}")
     public void deleteRequester(@PathVariable("uid") String uid) {
         requesterService.deleteRequester(uid);
     }
 
-    @PutMapping(path="{uid}/{txnId}")
+    @PutMapping(path="updateTxnId/{uid}/{txnId}")
     public void updateTxnId(@PathVariable("uid") String uid, @PathVariable("txnId") String txnId) {
         requesterService.updateRequester(uid, txnId);
     }
+
+    @GetMapping(path="requestConsent/{uid}/{introducerUid}")
+    public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid) {
+        return requesterService.requestConsent(uid, introducerUid);
+    }
+
 }
