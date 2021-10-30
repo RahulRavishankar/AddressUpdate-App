@@ -3,6 +3,7 @@
 bin/
 mvnw
 mvnw.cmd
+src/main/resources/sendgrid.env
 
 HELP.md
 target/
