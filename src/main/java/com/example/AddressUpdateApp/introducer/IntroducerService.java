@@ -30,7 +30,6 @@ public class IntroducerService {
 
         introducer.setConsentProvided(Consent.AWAITING_RESPONSE);
         Optional<Introducer> introducerByUid = introducerRepository.findIntroducerByUid(introducer.getUid());
-        System.out.println("Before inserting: " + introducer);
         if(!introducerByUid.isPresent()) {
             introducerRepository.save(introducer);
         }
@@ -192,12 +191,12 @@ public class IntroducerService {
         return jsonRes.toString();
     }
 
+    @Transactional
     public void updateConsent(String uid, String requesterUid, Consent consent) {
         boolean exists = introducerRepository.existsById(uid);
         if(exists) {
             Optional<Introducer> introducerByUid = introducerRepository.findIntroducerByUidAndRequesterUid(uid, requesterUid); // or findIntroducerByUid
             if(introducerByUid.get().getConsentProvided() != consent) {
-                System.out.println("Before updating: "+ introducerByUid.get());
                 introducerByUid.get().setConsentProvided(consent);
             }
         }

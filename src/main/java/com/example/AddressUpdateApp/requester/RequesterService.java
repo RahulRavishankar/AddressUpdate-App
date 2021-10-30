@@ -208,11 +208,6 @@ public class RequesterService {
             request.setEntity(params);
 
             HttpResponse response = httpClient.execute(request);
-            System.out.println("Here: "+ response);
-
-//            String json = EntityUtils.toString(response.getEntity());
-//            JSONObject jsonRes = new JSONObject(json);
-//            System.out.println("Json obj: " + jsonRes);
 
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -22,16 +22,16 @@ public class Introducer {
 	public Introducer() {
 	}
 
-	private Introducer(String uid, String requesterUid, String txnId, Consent consentProvided) {
-		System.out.println("Trying to initialise....");
+	public Introducer(String uid, String txnId, String requesterUid, String addressXml, Consent consentProvided) {
 		this.uid = uid;
-		this.requesterUid = requesterUid;
 		this.txnId = txnId;
+		this.requesterUid = requesterUid;
+		this.addressXml = addressXml;
 		this.consentProvided = consentProvided;
 	}
 
 	public Introducer(String uid, String requesterUid) {
-		this(uid, requesterUid, null, Consent.AWAITING_RESPONSE);
+		this(uid, null, requesterUid, null, Consent.AWAITING_RESPONSE);
 	}
 
 	public String getUid() {
