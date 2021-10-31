@@ -204,7 +204,7 @@ public class IntroducerService {
         //////Store the address in the requester database
         httpClient = HttpClientBuilder.create().build();
         try {
-            HttpPost request = new HttpPost("https://locahost:8080/requester/updateAddress/"+requesterUid);
+            HttpPost request = new HttpPost("http://localhost:8080/requester/updateAddress/"+requesterUid);
             StringEntity params = new StringEntity(jsonObject.toString());
             request.addHeader("content-type", "application/json");
             request.setEntity(params);
