@@ -27,4 +27,12 @@ public class VerifyAddr {
     public void setDst(String dst) {
         this.dst = dst;
     }
+    
+    @Override
+	public String toString() {
+		return "VerifyAddr{" +
+				"src='" + src + '\'' +
+				", dst='" + dst + '\'' +
+				'}';
+	}
 }

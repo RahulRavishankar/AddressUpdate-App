@@ -2,21 +2,35 @@ package com.example.AddressUpdateApp.requester;
 
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Configuration
+@PropertySource("classpath:application.properties")
 public class RequesterService {
 
     private final RequesterRepository requesterRepository;
@@ -259,30 +273,56 @@ public class RequesterService {
         // What happens if an invalid introducerUid is entered?
         return "Request sent";
     }
-
+    @Value("${maps.api-key}") String mapsAPIKey;
     public String verifyAddress(String src, String dst) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("origins", src);
-            jsonObject.put("destinations", dst);
-            jsonObject.put("key", "AIzaSyBe90jRsUigBhSlURdDR087Ojk9Mbvjqsw");
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+//        JSONObject jsonObject = new JSONObject();
+//        try {
+//            jsonObject.put("origins", src);
+//            jsonObject.put("destinations", dst);
+//            jsonObject.put("key", "AIzaSyBe90jRsUigBhSlURdDR087Ojk9Mbvjqsw");
+//        }
+//        catch(Exception e) {
+//            e.printStackTrace();
+//        }
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse response = null;
+        double distance = 0.0;
         try {
             src = src.replace(' ', '+');
             dst = dst.replace(' ', '+');
 
             System.out.println(src);
             System.out.println(dst);
-            HttpPost request = new HttpPost("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" +
-                    src + "&destinations=" + dst);
+            System.out.println(mapsAPIKey);
+            
+//            CloseableHttpClient client = HttpClientBuilder.create().build();
+//            		Request request = new Request.Builder()
+//            		  .url("https://maps.googleapis.com/maps/api/distancematrix/json?origins=Washington%2C%20DC&destinations=New%20York%20City%2C%20NY&units=imperial&key=YOUR_API_KEY")
+//            		  .method("GET", null)
+//            		  .build();
+//            		Response response = client.newCall(request).execute();
+            HttpGet request = new HttpGet("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" +
+                    src + "&destinations=" + dst+"&key="+mapsAPIKey);
 
             response = httpClient.execute(request);
+//            response.
+            InputStream body = response.getEntity().getContent();
+            String bod = IOUtils.toString(body);
+//            System.out.println(bod);
+            JSONObject jsonBody = new JSONObject(bod.substring(bod.indexOf("{"), bod.lastIndexOf("}") + 1));
+            JSONArray jsonarr = jsonBody.getJSONArray("rows");
+//            System.out.println(jsonarr.toString());
+            JSONObject jele = jsonarr.getJSONObject(0);
+//            System.out.println(jele.toString());
+            JSONArray jarr = jele.getJSONArray("elements");
+//            System.out.println(jarr.toString());
+            JSONObject dist = jarr.getJSONObject(0);
+            JSONObject finaldist = dist.getJSONObject("distance");
+            distance = finaldist.getDouble("value");
+//            System.out.println(""+distance);
+            
+//            double distance = (double) jsonBody.get("rows").get("elements").get("distance").get("value");
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
@@ -292,24 +332,9 @@ public class RequesterService {
                 e.printStackTrace();
             }
         }
-
-        try {
-            System.out.println(response);
-
-            System.out.println(response.getEntity().getContent());
-//            String json = EntityUtils.toString(response.getEntity());
-//            System.out.println(json);
-//            JSONObject jsonResponse = new JSONObject(json);
-//            System.out.println(jsonResponse.get("row"));
-
-        }
-        catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-//        catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-        return response.toString();
+        String res = "N";
+        if(distance <= 20.000000000)
+        	res = "Y";
+        return res;
     }
 }
