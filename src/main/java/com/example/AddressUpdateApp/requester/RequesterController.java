@@ -1,6 +1,7 @@
 package com.example.AddressUpdateApp.requester;
 
 import com.example.AddressUpdateApp.utils.Consent;
+import com.example.AddressUpdateApp.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,9 +61,10 @@ public class RequesterController {
         requesterService.updateRequester(uid, txnId);
     }
 
-    @GetMapping(path="requestConsent/{uid}/{introducerUid}/{toEmail}")
-    public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid, @PathVariable("toEmail") String toEmail) {
-        return requesterService.requestConsent(uid, introducerUid, toEmail);
+    @GetMapping(path="requestConsent/{uid}/{introducerUid}/")
+    public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid,
+                                 @RequestBody Email toEmail) {
+        return requesterService.requestConsent(uid, introducerUid, toEmail.getEmail());
     }
 
 
