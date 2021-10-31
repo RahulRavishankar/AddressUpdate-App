@@ -3,6 +3,9 @@ package com.example.AddressUpdateApp.utils;
 public class NewAddress {
     private String address;
 
+    public NewAddress() {
+    }
+
     public NewAddress(String address) {
         this.address = address;
     }

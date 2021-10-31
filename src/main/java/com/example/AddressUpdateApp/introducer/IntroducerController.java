@@ -2,6 +2,7 @@ package com.example.AddressUpdateApp.introducer;
 
 import com.example.AddressUpdateApp.utils.Consent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -35,7 +36,7 @@ public class IntroducerController {
         return introducerService.fetchAddress(uid, txnId, otp, requesterUid);
     }
 
-    @PostMapping(path="addIntroducer")
+    @PostMapping(path="addIntroducer", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void addIntroducer(@RequestBody Introducer introducer) {
         introducerService.addIntroducer(introducer);
     }
@@ -60,8 +61,9 @@ public class IntroducerController {
         introducerService.updateConsent(uid, requesterUid, Consent.NOT_GIVEN);
     }
 
-    @GetMapping(path="getAllRequesters/{uid}")
-    public String getAllRequesters(@PathVariable("uid") String uid) {
+    @PostMapping(path="getAllRequesters/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public String getAllRequesters(@PathVariable("uid") String uid, @RequestBody Introducer introducer) {
+        System.out.println("Heloooooooooo" + introducer.getUid());
         return introducerService.getAllRequesters(uid);
     }
 

@@ -3,6 +3,7 @@ package com.example.AddressUpdateApp.requester;
 import com.example.AddressUpdateApp.utils.Consent;
 import com.example.AddressUpdateApp.utils.Email;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,7 @@ public class RequesterController {
         return requesterService.fetchAddress(uid, txnId, otp);
     }
 
-    @PostMapping(path="addRequester")
+    @PostMapping(path="addRequester", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void addRequester(@RequestBody Requester requester) {
         requesterService.addRequester(requester);
     }
@@ -61,30 +62,31 @@ public class RequesterController {
         requesterService.updateRequester(uid, txnId);
     }
 
-    @GetMapping(path="requestConsent/{uid}/{introducerUid}/")
+    @PostMapping(path="requestConsent/{uid}/{introducerUid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid,
                                  @RequestBody Email toEmail) {
         return requesterService.requestConsent(uid, introducerUid, toEmail.getEmail());
     }
 
 
-    @PostMapping(path="verifyAddress/{uid}")
+    @PostMapping(path="verifyAddress/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public String verifyAddress(@PathVariable("uid") String uid, @RequestBody VerifyAddr verifyAddr) {
         return requesterService.verifyAddress(uid, verifyAddr.getSrc(), verifyAddr.getDst());
     }
 
-    @PostMapping(path="updateAddressFinal/{uid}")
+    @PostMapping(path="updateAddressFinal/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public String updateAddress(@PathVariable("uid") String uid, @RequestBody NewAddress newAddr) {
         return requesterService.updateNewAddress(uid, newAddr.getAddress());
     }
 
-    @PostMapping(path="updateAddress/{uid}")
+    @PostMapping(path="updateAddress/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void updateAddress_(@PathVariable("uid") String uid, @RequestBody NewAddress newAddr) {
         requesterService.updateAddress_(uid, newAddr.getAddress());
     }
 
     @GetMapping(path="updateConsent/{uid}/{introducerUid}/{consent}")
-    public void provideConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid, @PathVariable("consent") Consent consent) {
+    public void provideConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid,
+                               @PathVariable("consent") Consent consent) {
         requesterService.updateConsent(uid, introducerUid, consent);
     }
 }
