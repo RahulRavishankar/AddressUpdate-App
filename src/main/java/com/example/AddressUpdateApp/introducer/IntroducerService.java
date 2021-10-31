@@ -273,8 +273,8 @@ public class IntroducerService {
 
         List<String> res = new ArrayList<String>();
         requesters.ifPresent(r -> {
-            res.add(r.getRequesterUid()+r.getConsentProvided());
-            map.put(r.getRequesterUid(), r.getRequesterUid());
+            res.add(r.getRequesterUid() + r.getConsentProvided());
+            map.put(r.getRequesterUid(), r.getConsentProvided().toString());
         });
 
 
