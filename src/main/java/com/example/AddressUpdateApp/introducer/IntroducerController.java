@@ -61,9 +61,8 @@ public class IntroducerController {
         introducerService.updateConsent(uid, requesterUid, Consent.NOT_GIVEN);
     }
 
-    @PostMapping(path="getAllRequesters/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public String getAllRequesters(@PathVariable("uid") String uid, @RequestBody Introducer introducer) {
-        System.out.println("Heloooooooooo" + introducer.getUid());
+    @PostMapping(path="getAllRequesters/{uid}")
+    public String getAllRequesters(@PathVariable("uid") String uid) {
         return introducerService.getAllRequesters(uid);
     }
 
