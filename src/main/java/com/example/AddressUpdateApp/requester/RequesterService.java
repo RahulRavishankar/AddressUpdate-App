@@ -23,13 +23,26 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import javax.transaction.Transactional;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
-
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 @Service
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -186,7 +199,9 @@ public class RequesterService {
         }
 
         JSONObject jsonRes = null;
+        String jsonstr = null;
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        String data = null;
         try {
             HttpPost request = new HttpPost("https://stage1.uidai.gov.in/onlineekyc/getEkyc/");
             StringEntity params = new StringEntity(jsonObject.toString());
@@ -194,8 +209,13 @@ public class RequesterService {
             request.setEntity(params);
 
             HttpResponse response = httpClient.execute(request);
-            String json = EntityUtils.toString(response.getEntity());
-            jsonRes = new JSONObject(json);
+            InputStream json = response.getEntity().getContent();
+            jsonstr = IOUtils.toString(json);
+            JSONObject jsonBody = new JSONObject(jsonstr.substring(jsonstr.indexOf("{"), jsonstr.lastIndexOf("}") + 1));
+            JSONObject ekycstring = jsonBody.getJSONObject("eKycString");
+            String rawdata = ekycstring.toString();
+            data = rawdata.substring(rawdata.indexOf("{"), rawdata.lastIndexOf("}") + 1);
+//            jsonRes = new JSONObject(jsonstr);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -206,9 +226,31 @@ public class RequesterService {
                 e.printStackTrace();
             }
         }
-
-        System.out.println(jsonRes);
-        return jsonRes.toString();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        
+        DocumentBuilder builder;
+        Element rootElement ;
+        try
+        {
+            builder = factory.newDocumentBuilder();
+ 
+            // Use String reader
+            Document document = builder.parse( new InputSource(
+                    new StringReader( data ) ) );
+            rootElement = document.getDocumentElement();
+//            TransformerFactory tranFactory = TransformerFactory.newInstance();
+//            Transformer aTransformer = tranFactory.newTransformer();
+//            Source src = new DOMSource( document );
+//            Result dest = new StreamResult( new File( "xmlFileName.xml" ) );
+//            aTransformer.transform( src, dest );
+        } catch (Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //rootelement ?
+        System.out.println(data);
+        return data;
     }
 
     public String requestConsent(String uid, String introducerUid, String toEmail) {
