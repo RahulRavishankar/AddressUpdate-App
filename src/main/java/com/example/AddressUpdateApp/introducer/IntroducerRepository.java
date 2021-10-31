@@ -14,4 +14,8 @@ public interface IntroducerRepository extends JpaRepository<Introducer, String> 
 
     @Query(value = "SELECT * from Introducer s WHERE s.uid = ?1 and s.requester_uid = ?2", nativeQuery = true)
     Optional<Introducer> findIntroducerByUidAndRequesterUid(String uid, String requesterUid);
+
+    @Query(value = "SELECT * from Introducer s WHERE s.uid = ?1", nativeQuery = true)
+    Optional<Introducer> findAllById(String uid);
+
 }

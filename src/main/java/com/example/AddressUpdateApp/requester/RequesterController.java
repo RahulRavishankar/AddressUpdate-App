@@ -3,6 +3,7 @@ package com.example.AddressUpdateApp.requester;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.example.AddressUpdateApp.requester.VerifyAddr;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -52,6 +53,11 @@ public class RequesterController {
     @GetMapping(path="requestConsent/{uid}/{introducerUid}")
     public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid) {
         return requesterService.requestConsent(uid, introducerUid);
+    }
+
+    @PostMapping(path="verifyAddress")
+    public String verifyAddress(@RequestBody VerifyAddr verifyAddr) {
+        return requesterService.verifyAddress(verifyAddr.getSrc(), verifyAddr.getDst());
     }
 
 }

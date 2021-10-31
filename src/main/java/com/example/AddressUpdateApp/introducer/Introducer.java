@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 enum Consent {
-	GIVEN, NOT_GIVEN, AWAITING_RESPONSE
+	AWAITING_RESPONSE, GIVEN, NOT_GIVEN, PROCESS_COMPLETE
 }
 
 @Entity

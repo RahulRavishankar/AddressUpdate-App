@@ -53,4 +53,14 @@ public class IntroducerController {
         introducerService.updateConsent(uid, requesterUid, Consent.GIVEN);
     }
 
+    @GetMapping(path="declineConsent/{uid}/{requesterUid}")
+    public void declineConsent(@PathVariable("uid") String uid, @PathVariable("requesterUid") String requesterUid) {
+        introducerService.updateConsent(uid, requesterUid, Consent.NOT_GIVEN);
+    }
+
+    @GetMapping(path="getAllRequesters/{uid}")
+    public String getAllRequesters(@PathVariable("uid") String uid) {
+        return introducerService.getAllRequesters(uid);
+    }
+
 }

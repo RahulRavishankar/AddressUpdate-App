@@ -13,8 +13,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
+import static java.util.Collections.emptyList;
 
 @Service
 public class IntroducerService {
@@ -202,5 +203,14 @@ public class IntroducerService {
         }
 
         // once the consent is given, notify the requester
+    }
+
+    public String getAllRequesters(String uid) {
+        Optional<Introducer> requesters = introducerRepository.findAllById(uid);
+        List<String> res = new ArrayList<String>();
+        requesters.ifPresent(r -> {
+            res.add(r.getRequesterUid());
+        });
+        return res.toString();
     }
 }

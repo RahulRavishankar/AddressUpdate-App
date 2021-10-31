@@ -259,4 +259,57 @@ public class RequesterService {
         // What happens if an invalid introducerUid is entered?
         return "Request sent";
     }
+
+    public String verifyAddress(String src, String dst) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("origins", src);
+            jsonObject.put("destinations", dst);
+            jsonObject.put("key", "AIzaSyBe90jRsUigBhSlURdDR087Ojk9Mbvjqsw");
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpResponse response = null;
+        try {
+            src = src.replace(' ', '+');
+            dst = dst.replace(' ', '+');
+
+            System.out.println(src);
+            System.out.println(dst);
+            HttpPost request = new HttpPost("https://maps.googleapis.com/maps/api/distancematrix/json?origins=" +
+                    src + "&destinations=" + dst);
+
+            response = httpClient.execute(request);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            System.out.println(response);
+
+            System.out.println(response.getEntity().getContent());
+//            String json = EntityUtils.toString(response.getEntity());
+//            System.out.println(json);
+//            JSONObject jsonResponse = new JSONObject(json);
+//            System.out.println(jsonResponse.get("row"));
+
+        }
+        catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+//        catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+
+        return response.toString();
+    }
 }
