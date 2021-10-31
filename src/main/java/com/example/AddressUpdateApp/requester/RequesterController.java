@@ -1,5 +1,6 @@
 package com.example.AddressUpdateApp.requester;
 
+import com.example.AddressUpdateApp.utils.Consent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -59,9 +60,9 @@ public class RequesterController {
         requesterService.updateRequester(uid, txnId);
     }
 
-    @GetMapping(path="requestConsent/{uid}/{introducerUid}")
-    public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid) {
-        return requesterService.requestConsent(uid, introducerUid);
+    @GetMapping(path="requestConsent/{uid}/{introducerUid}/{toEmail}")
+    public String requestConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid, @PathVariable("toEmail") String toEmail) {
+        return requesterService.requestConsent(uid, introducerUid, toEmail);
     }
 
 
@@ -73,5 +74,15 @@ public class RequesterController {
     @PostMapping(path="updateAddressFinal/{uid}")
     public String updateAddress(@PathVariable("uid") String uid, @RequestBody NewAddress newAddr) {
         return requesterService.updateNewAddress(uid, newAddr.getAddress());
+    }
+
+    @PostMapping(path="updateAddress/{uid}")
+    public void updateAddress_(@PathVariable("uid") String uid, @RequestBody NewAddress newAddr) {
+        requesterService.updateAddress_(uid, newAddr.getAddress());
+    }
+
+    @GetMapping(path="updateConsent/{uid}/{introducerUid}/{consent}")
+    public void provideConsent(@PathVariable("uid") String uid, @PathVariable("introducerUid") String introducerUid, @PathVariable("consent") Consent consent) {
+        requesterService.updateConsent(uid, introducerUid, consent);
     }
 }

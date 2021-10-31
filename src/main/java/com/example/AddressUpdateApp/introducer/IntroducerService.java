@@ -153,7 +153,7 @@ public class IntroducerService {
         }
     }
 
-    public String fetchAddress(String uid, String txnId, String otp) {
+    public String fetchAddress(String uid, String txnId, String otp, String requesterUid) {
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -187,8 +187,56 @@ public class IntroducerService {
             }
         }
 
+        // decode the address
+
+        String decodedAddress = "";
+        //////Store the address in the introducer database
+        this.updateAddress(uid, requesterUid, decodedAddress);
+
+        jsonObject = new JSONObject();
+        try {
+            jsonObject.put("address", decodedAddress);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        //////Store the address in the requester database
+        httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost request = new HttpPost("https://locahost:8080/requester/updateAddress/"+requesterUid);
+            StringEntity params = new StringEntity(jsonObject.toString());
+            request.addHeader("content-type", "application/json");
+            request.setEntity(params);
+
+            HttpResponse response = httpClient.execute(request);
+//            String json = EntityUtils.toString(response.getEntity());
+//            jsonRes = new JSONObject(json);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        /////////////////////////////////
+
         System.out.println(jsonRes);
         return jsonRes.toString();
+    }
+
+    @Transactional
+    private void updateAddress(String uid, String requesterUid, String address) {
+        boolean exists = introducerRepository.existsById(uid);
+        if(exists) {
+            Optional<Introducer> introducerByUid = introducerRepository.findIntroducerByUidAndRequesterUid(uid, requesterUid); // or findIntroducerByUid
+            if(introducerByUid.get().getAddress() != address) {
+                introducerByUid.get().setAddress(address);
+            }
+        }
     }
 
     @Transactional
@@ -201,14 +249,29 @@ public class IntroducerService {
             }
         }
 
-        // once the consent is given, notify the requester
+        // Notify the requester
+        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        try {
+            HttpPost request = new HttpPost("http://localhost:8080/requester/updateConsent/" +
+                    requesterUid + "/" + uid + "/" + consent);
+            HttpResponse response = httpClient.execute(request);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String getAllRequesters(String uid) {
         Optional<Introducer> requesters = introducerRepository.findAllById(uid);
         List<String> res = new ArrayList<String>();
         requesters.ifPresent(r -> {
-            res.add(r.getRequesterUid());
+            res.add(r.getRequesterUid()+r.getConsentProvided());
         });
         return res.toString();
     }

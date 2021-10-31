@@ -29,9 +29,10 @@ public class IntroducerController {
         return introducerService.verifyOtp(uid, txnId, otp);
     }
 
-    @GetMapping(path="fetchAddress/{uid}/{txn}/{otp}")
-    public String fetchAddress(@PathVariable("uid") String uid, @PathVariable("txn") String txnId, @PathVariable("otp") String otp) {
-        return introducerService.fetchAddress(uid, txnId, otp);
+    @GetMapping(path="fetchAddress/{uid}/{txn}/{otp}/{requesterUid}")
+    public String fetchAddress(@PathVariable("uid") String uid, @PathVariable("txn") String txnId, @PathVariable("otp") String otp,
+                               @PathVariable("requesterUid") String requesterUid) {
+        return introducerService.fetchAddress(uid, txnId, otp, requesterUid);
     }
 
     @PostMapping(path="addIntroducer")

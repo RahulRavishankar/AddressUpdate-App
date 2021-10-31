@@ -1,5 +1,7 @@
 package com.example.AddressUpdateApp.requester;
 
+import com.example.AddressUpdateApp.introducer.Introducer;
+import com.example.AddressUpdateApp.utils.Consent;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.tomcat.util.json.JSONParser;
@@ -209,7 +211,7 @@ public class RequesterService {
         return jsonRes.toString();
     }
 
-    public String requestConsent(String uid, String introducerUid) {
+    public String requestConsent(String uid, String introducerUid, String toEmail) {
         // Add Introducer to the database
         JSONObject jsonObject = new JSONObject();
         try {
@@ -240,7 +242,7 @@ public class RequesterService {
         }
 
         ///Send email/////////
-        String toEmail = "rahul.k.ravishankar@gmail.com";
+//        String toEmail = "rahul.k.ravishankar@gmail.com";
         jsonObject = new JSONObject();
         try {
             jsonObject.put("toEmail", toEmail);
@@ -334,12 +336,34 @@ public class RequesterService {
     public String updateNewAddress(String uid, String newAddress) {
         boolean exists = requesterRepository.existsById(uid);
         if(exists) {
-            Optional<Requester> requesterByUid = requesterRepository.findById(uid); // or findRequesterByUid
+            Optional<Requester> requesterByUid = requesterRepository.findById(uid);
             if(requesterByUid.get().getNewAddress() == null) {
                 requesterByUid.get().setNewAddress(newAddress);
             }
         }
 
         return "Update Successful";
+    }
+
+    @Transactional
+    public void updateAddress_(String uid, String address) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+            Optional<Requester> introducerByUid = requesterRepository.findRequesterByUid(uid);
+            if(introducerByUid.get().getAddress() != address) {
+                introducerByUid.get().setAddress(address);
+            }
+        }
+    }
+
+    @Transactional
+    public void updateConsent(String uid, String introducerUid, Consent consent) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+            Optional<Introducer> introducerByUid = requesterRepository.findRequesterByUidAndIntroducerUid(uid, introducerUid); // or findIntroducerByUid
+            if(introducerByUid.get().getConsentProvided() != consent) {
+                introducerByUid.get().setConsentProvided(consent);
+            }
+        }
     }
 }
