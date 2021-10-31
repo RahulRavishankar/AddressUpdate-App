@@ -65,8 +65,8 @@ public class RequesterController {
 
     @PostMapping(path="verifyAddress")
     public String verifyAddress(@RequestBody VerifyAddr verifyAddr) {
-    	System.out.println(verifyAddr.getSrc());
-    	System.out.println(verifyAddr.getDst());
+//    	System.out.println(verifyAddr.getSrc());
+//    	System.out.println(verifyAddr.getDst());
     	return requesterService.verifyAddress(verifyAddr.getSrc(), verifyAddr.getDst());
     }
 

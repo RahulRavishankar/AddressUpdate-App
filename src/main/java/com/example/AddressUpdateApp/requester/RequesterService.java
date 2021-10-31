@@ -292,9 +292,9 @@ public class RequesterService {
             src = src.replace(' ', '+');
             dst = dst.replace(' ', '+');
 
-            System.out.println(src);
-            System.out.println(dst);
-            System.out.println(mapsAPIKey);
+//            System.out.println(src);
+//            System.out.println(dst);
+//            System.out.println(mapsAPIKey);
             
 //            CloseableHttpClient client = HttpClientBuilder.create().build();
 //            		Request request = new Request.Builder()
