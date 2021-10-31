@@ -1,9 +1,9 @@
 package com.example.AddressUpdateApp.requester;
 
-import org.json.JSONObject;
+import com.example.AddressUpdateApp.utils.VerifyAddr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.example.AddressUpdateApp.requester.VerifyAddr;
+import com.example.AddressUpdateApp.utils.NewAddress;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -55,9 +55,13 @@ public class RequesterController {
         return requesterService.requestConsent(uid, introducerUid);
     }
 
-    @PostMapping(path="verifyAddress")
-    public String verifyAddress(@RequestBody VerifyAddr verifyAddr) {
-        return requesterService.verifyAddress(verifyAddr.getSrc(), verifyAddr.getDst());
+    @PostMapping(path="verifyAddress/{uid}")
+    public String verifyAddress(@PathVariable("uid") String uid, @RequestBody VerifyAddr verifyAddr) {
+        return requesterService.verifyAddress(uid, verifyAddr.getSrc(), verifyAddr.getDst());
     }
 
+    @PostMapping(path="updateAddressFinal/{uid}")
+    public String updateAddress(@PathVariable("uid") String uid, @RequestBody NewAddress newAddr) {
+        return requesterService.updateNewAddress(uid, newAddr.getAddress());
+    }
 }

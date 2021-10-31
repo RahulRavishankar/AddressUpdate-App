@@ -1,4 +1,4 @@
-package com.example.AddressUpdateApp.requester;
+package com.example.AddressUpdateApp.utils;
 
 public class NewAddress {
     private String address;

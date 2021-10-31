@@ -260,7 +260,7 @@ public class RequesterService {
         return "Request sent";
     }
 
-    public String verifyAddress(String src, String dst) {
+    public String verifyAddress(String uid, String src, String dst) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("origins", src);
@@ -311,5 +311,18 @@ public class RequesterService {
 //        }
 
         return response.toString();
+    }
+
+    @Transactional
+    public String updateNewAddress(String uid, String newAddress) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+            Optional<Requester> requesterByUid = requesterRepository.findById(uid); // or findRequesterByUid
+            if(requesterByUid.get().getNewAddress() == null) {
+                requesterByUid.get().setNewAddress(newAddress);
+            }
+        }
+
+        return "Update Successful";
     }
 }
