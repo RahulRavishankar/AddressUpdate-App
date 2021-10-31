@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping(path="introducer")
@@ -62,7 +64,7 @@ public class IntroducerController {
     }
 
     @PostMapping(path="getAllRequesters/{uid}")
-    public String getAllRequesters(@PathVariable("uid") String uid) {
+    public Map<String, String> getAllRequesters(@PathVariable("uid") String uid) {
         return introducerService.getAllRequesters(uid);
     }
 

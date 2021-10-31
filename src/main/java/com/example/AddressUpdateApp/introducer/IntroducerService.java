@@ -267,12 +267,18 @@ public class IntroducerService {
         }
     }
 
-    public String getAllRequesters(String uid) {
+    public Map<String, String> getAllRequesters(String uid) {
         Optional<Introducer> requesters = introducerRepository.findAllById(uid);
+        HashMap<String, String> map = new HashMap<>();
+
         List<String> res = new ArrayList<String>();
         requesters.ifPresent(r -> {
             res.add(r.getRequesterUid()+r.getConsentProvided());
+            map.put(r.getRequesterUid(), r.getRequesterUid());
         });
-        return res.toString();
+
+
+//        return res.toString();
+        return map;
     }
 }
