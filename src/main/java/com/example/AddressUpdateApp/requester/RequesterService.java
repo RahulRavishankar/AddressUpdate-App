@@ -192,8 +192,9 @@ public class RequesterService {
             request.setEntity(params);
 
             HttpResponse response = httpClient.execute(request);
-            String json = EntityUtils.toString(response.getEntity());
-            jsonRes = new JSONObject(json);
+            InputStream json = response.getEntity().getContent();
+            String jsonstr = IOUtils.toString(json);
+            jsonRes = new JSONObject(jsonstr);
 
         } catch (Exception ex) {
             ex.printStackTrace();
