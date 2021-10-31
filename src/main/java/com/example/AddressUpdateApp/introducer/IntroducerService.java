@@ -1,5 +1,6 @@
 package com.example.AddressUpdateApp.introducer;
 
+import com.example.AddressUpdateApp.utils.Consent;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -14,8 +15,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-
-import static java.util.Collections.emptyList;
 
 @Service
 public class IntroducerService {

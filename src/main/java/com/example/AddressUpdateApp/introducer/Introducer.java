@@ -4,9 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-enum Consent {
-	AWAITING_RESPONSE, GIVEN, NOT_GIVEN, PROCESS_COMPLETE
-}
+import com.example.AddressUpdateApp.utils.Consent;
 
 @Entity
 @Table
@@ -16,17 +14,17 @@ public class Introducer {
 	private String uid;
 	private String txnId;
 	private String requesterUid;
-	private String addressXml;
+	private String address;
 	private Consent consentProvided;
 
 	public Introducer() {
 	}
 
-	public Introducer(String uid, String txnId, String requesterUid, String addressXml, Consent consentProvided) {
+	public Introducer(String uid, String txnId, String requesterUid, String address, Consent consentProvided) {
 		this.uid = uid;
 		this.txnId = txnId;
 		this.requesterUid = requesterUid;
-		this.addressXml = addressXml;
+		this.address = address;
 		this.consentProvided = consentProvided;
 	}
 
@@ -58,12 +56,12 @@ public class Introducer {
 		this.txnId = txnId;
 	}
 
-	public String getAddressXml() {
-		return addressXml;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setAddressXml(String addressXml) {
-		this.addressXml = addressXml;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public Consent getConsentProvided() {
@@ -80,7 +78,7 @@ public class Introducer {
 				"uid='" + uid + '\'' +
 				", txnId='" + txnId + '\'' +
 				", requesterUid='" + requesterUid + '\'' +
-				", addressXml='" + addressXml + '\'' +
+				", address='" + address + '\'' +
 				", consentProvided=" + consentProvided +
 				'}';
 	}
