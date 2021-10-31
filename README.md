@@ -29,3 +29,7 @@ Backend has been developed using Java SpringBoot.
 
 ### Architecture Diagram
 ![Architecture diagram](https://github.com/RahulRavishankar/AddressUpdate-App/blob/master/Capture.PNG)
+
+### Project Demo
+
+Link to project demonstration [Link](https://drive.google.com/drive/folders/1UP_wLIwqjsJUCy2bhsR1-ev7WQ7uzLQ3?usp=sharing)
