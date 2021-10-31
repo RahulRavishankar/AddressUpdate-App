@@ -274,17 +274,9 @@ public class RequesterService {
         // What happens if an invalid introducerUid is entered?
         return "Request sent";
     }
+
     @Value("${maps.api-key}") String mapsAPIKey;
-    public String verifyAddress(String src, String dst) {
-//        JSONObject jsonObject = new JSONObject();
-//        try {
-//            jsonObject.put("origins", src);
-//            jsonObject.put("destinations", dst);
-//            jsonObject.put("key", "AIzaSyBe90jRsUigBhSlURdDR087Ojk9Mbvjqsw");
-//        }
-//        catch(Exception e) {
-//            e.printStackTrace();
-//        }
+    public String verifyAddress(String uid, String src, String dst) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpResponse response = null;
@@ -337,5 +329,18 @@ public class RequesterService {
         if(distance <= 20.000000000)
         	res = "Y";
         return res;
+    }
+
+    @Transactional
+    public String updateNewAddress(String uid, String newAddress) {
+        boolean exists = requesterRepository.existsById(uid);
+        if(exists) {
+            Optional<Requester> requesterByUid = requesterRepository.findById(uid); // or findRequesterByUid
+            if(requesterByUid.get().getNewAddress() == null) {
+                requesterByUid.get().setNewAddress(newAddress);
+            }
+        }
+
+        return "Update Successful";
     }
 }
